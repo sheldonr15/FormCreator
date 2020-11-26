@@ -1,6 +1,5 @@
 package com.example.sortinggallery;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,8 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
+import com.example.sortinggallery.formCreator;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -62,8 +61,8 @@ public class MainActivity2 extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent onFormClick = new Intent(MainActivity2.this, formCreator.class);
+                startActivity(onFormClick);
             }
         });
 
@@ -88,9 +87,7 @@ public class MainActivity2 extends AppCompatActivity {
             logout();
             return true;
         });
-        // NavigationView x = new NavigationView.OnNavigationItemSelectedListener();
-//        @Override
-//                public boolean OnN
+
     }
 
     @Override
@@ -112,20 +109,6 @@ public class MainActivity2 extends AppCompatActivity {
         return true;
     }
 
-
-    // @Override
-    // public boolean OnNaviga
-
-//    public boolean onOptionsItemSelected(Menu item){
-//        switch (item.getItemId()) {
-//            case R.id.nav_logout:
-//                loggedInFlag = false;
-//                Intent logOutIntent = new Intent(MainActivity2.this, Login.class);
-//                logOutIntent.putExtra("EXTRA_SESSION_ID", loggedInFlag);
-//                startActivity(logOutIntent);
-//                return true;
-//        }
-//    }
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -80,6 +80,8 @@ public class Login extends AppCompatActivity {
                     if(res==true){
                         Toast.makeText(Login.this, "Successfully Logged In!", Toast.LENGTH_SHORT).show();
                         // loggedInFlag = true;
+                        myEdit.putString("username", user);
+                        myEdit.commit();
                         myEdit.putBoolean("loggedInFlag", true);
                         myEdit.commit();
                         Intent logInIntent = new Intent(Login.this, MainActivity2.class);

@@ -20,4 +20,15 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_logout">Log out</string>
+
+    <string name="form_title">Enter Form Title</string>
+    <string name="form_desc">Enter Form Description</string>
+    <string name="add_field">Add Field</string>
+    <string name="pick_color">Select field</string>
+
+    <string-array name="types">
+        <item>Mobile</item>
+        <item>Office</item>
+        <item>Home</item>
+    </string-array>
 </resources>
