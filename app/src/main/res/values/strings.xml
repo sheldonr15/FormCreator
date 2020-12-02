@@ -17,12 +17,13 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
+<!--    <string name="menu_gallery">Gallery</string>-->
+    <string name="menu_profile">Profile</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_logout">Log out</string>
 
-    <string name="form_title">Enter Form Title</string>
-    <string name="form_desc">Enter Form Description</string>
+    <string name="form_title">Enter Form Title<font fgcolor='#FF0000'>*</font></string>
+    <string name="form_desc">Enter Form Description<font fgcolor='#FF0000'>*</font></string>
     <string name="add_field">Add Field</string>
     <string name="pick_color">Select field</string>
 

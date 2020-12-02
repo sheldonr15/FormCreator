@@ -28,6 +28,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="30dp"
             android:hint="@string/form_title"
+
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +50,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:hint="@string/form_desc"
+
+            app:errorEnabled="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -160,7 +164,8 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:text="@string/add_field"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:gravity="center"/>
 
         </LinearLayout>
 

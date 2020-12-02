@@ -1,11 +1,15 @@
-package com.example.sortinggallery.ui;
+package com.example.sortinggallery;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -19,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.example.sortinggallery.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -39,7 +44,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 
 public class formCreator extends AppCompatActivity {
     DatePickerDialog picker;
@@ -88,6 +97,14 @@ public class formCreator extends AppCompatActivity {
     static InputStreamReader isr;
     static BufferedReader br;
     static String message;
+
+    SharedPreferences sharedPreferences;
+
+    // Assume all fields are empty
+    Boolean formTitleEmpty = true;
+    Boolean formDescEmpty = true;
+    Boolean dateFromEmpty = true;
+    Boolean dateToEmpty = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +224,9 @@ public class formCreator extends AppCompatActivity {
         });
         Log.d("formCreator.java", "DIALOG > 'HERE' FIRST ");
 
+
         submit.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
 
@@ -223,77 +242,243 @@ public class formCreator extends AppCompatActivity {
                 String dateFromString = dateFrom.getText().toString().trim();
                 String dateToString = dateTo.getText().toString().trim();
 
-                try {
-                    obj.put("FormTitle", formTitleString);
-                    obj.put("FormDescription", formDescString);
-                    obj.put("DateFrom", dateFromString);
-                    obj.put("DateTo", dateToString);
-                    obj.put("formStruct", new JSONObject());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                String toastErrorString = "Fill fields :";
+
+                // if(formTitleString!=null || !formTitleString.isEmpty()){
+                if(!formTitleString.matches("")){
+                    formTitleEmpty = false;
+                    formTitle.setError(null);
+                }
+                else {
+                    Log.d("formCreator.java", "Date Time > Form Description : " + formTitleString);
+                    toastErrorString = toastErrorString + " <Form Title>";
+                    formTitle.setError("Form Title is a required field!");
+                }
+
+                // if(formDescString!=null || !formDescString.isEmpty()){
+                if(!formDescString.matches("")){
+                    formDescEmpty = false;
+                    formDesc.setError(null);
+                }
+                else {
+                    Log.d("formCreator.java", "Date Time > Form Description : " + formDescString);
+                    toastErrorString = toastErrorString + " <Form Description>";
+                    formDesc.setError("Form Description is a required field!");
+                }
+
+                if(!dateFromString.matches("")){
+                    dateFromEmpty = false;
+                }
+                else {
+                    toastErrorString = toastErrorString + " <From Date>";
+                }
+
+                if(!dateToString.matches("")){
+                    dateToEmpty = false;
+                }
+                else {
+                    toastErrorString = toastErrorString + " <To Date>";
+                }
+
+                if(formDescEmpty || formTitleEmpty || dateFromEmpty || dateToEmpty){
+                    Log.d("formCreator.java", "Date Time : Form Title > " + formTitleEmpty + " | Form Description > " + formDescEmpty + " | From Date > " + dateFromEmpty + " | To Date > " + dateToEmpty);
+                    Toast.makeText(formCreator.this, toastErrorString, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Log.d("formCreator.java", "Date Time : Form Title > " + formTitleEmpty + " | Form Description > " + formDescEmpty + " | From Date > " + dateFromEmpty + " | To Date > " + dateToEmpty);
+                    Log.d("formCreator.java", "Date Time : Form Title > " + formTitleString + " | Form Description > " + formDescString + " | From Date > " + dateFromString + " | To Date > " + dateToString);
+                    try {
+                        obj.put("FormTitle", formTitleString);
+                        obj.put("FormDescription", formDescString);
+                        obj.put("DateFrom", dateFromString);
+                        obj.put("DateTo", dateToString);
+                        obj.put("formStruct", new JSONObject());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    try {
+                        show_children(getWindow().getDecorView());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("formCreate", "JSON Object final :  " + obj.toString());
+
+                    /*
+                     * Check if username folder exists
+                     * if yes :
+                     *       get external storage address + username -> add .JSON file
+                     * if no :
+                     *       create username folder
+                     *       get external storage address + username -> add .JSON file
+                     * */
+                    File[] folderNames = getExternalFilesDirs(null);
+
+                    sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+                    String username = sharedPreferences.getString("username", "default");
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyHHmmss");
+                    Date date = new Date();
+                    String currentDateTime = formatter.format(date);
+                    Log.d("formCreate", "JSON Create Folder Debug : Date Time " + currentDateTime);
+
+                    Boolean checkUserFolderExists = false;
+
+                    for(File i : folderNames){
+                        // /storage/emulated/0/Android/data/com.example.sortinggallery/files
+                        Log.d("formCreator.java", "Create Folder Folder names : " + i);
+
+                        for(File j : i.listFiles()){
+                            if(username.equals(j.toString().split("/")[j.toString().split("/").length-1])){
+                                checkUserFolderExists = true;
+                                Log.d("formCreate", "JSON Create Folder (Folder exists) : " + j);
+                            }
+                            else{
+                                Log.d("formCreate", "JSON Create Folder (Folder does not exist) : " + j);
+                            }
+
+                        }
+                    }
+
+                    if(checkUserFolderExists){
+                        File file = new File(getExternalFilesDir(null) + "/" + username, username + currentDateTime + ".json");
+                        FileOutputStream outputStream = null;
+                        Log.d("formCreate", "JSON Create Folder File Debug : Folder exists");
+
+                        try {
+                            file.createNewFile();
+                            outputStream = new FileOutputStream(file, true);
+
+                            outputStream.write(obj.toString().getBytes());
+                            outputStream.flush();
+                            outputStream.close();
+
+                            Log.d("formCreate", "JSON Create Folder File Debug : File created! ");
+                        } catch (Exception e) {
+                            Log.d("formCreate", "JSON Create Folder File Debug : File error " + e.getMessage());
+                        }
+
+                        FormCardsDatabaseHelper db = new FormCardsDatabaseHelper(formCreator.this);
+                        // public long addForm(String user, String from, String to, String title, String address)
+                        long val = db.addForm(username, dateFromString, dateToString, formTitleString, username + "/" + username + currentDateTime + ".json");
+
+                        if(val>0){
+                            Toast.makeText(formCreator.this, "Form details added", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(formCreator.this, "Form details addition Error!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        Log.d("formCreate", "JSON Create Folder Debug : Folder does not exist");
+                        File folder = new File(getExternalFilesDir(null), username);
+                        folder.mkdirs();
+
+                        File file = new File(getExternalFilesDir(null) + "/" + username, username + currentDateTime + ".json");
+                        FileOutputStream outputStream = null;
+
+                        try {
+                            file.createNewFile();
+                            outputStream = new FileOutputStream(file, true);
+
+                            outputStream.write(obj.toString().getBytes());
+                            outputStream.flush();
+                            outputStream.close();
+
+                            Log.d("formCreate", "JSON Create Folder Debug : File created! ");
+                        } catch (Exception e) {
+                            Log.d("formCreate", "JSON Create Folder Debug : File error " + e.getMessage());
+                        }
+
+
+                        FormCardsDatabaseHelper db = new FormCardsDatabaseHelper(formCreator.this);
+                        // public long addForm(String user, String from, String to, String title, String address)
+                        long val = db.addForm(username, dateFromString, dateToString, formTitleString, username + "/" + username + currentDateTime + ".json");
+
+                        if(val>0){
+                            Toast.makeText(formCreator.this, "Form details added", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(formCreator.this, "Form details addition Error!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    // Send JSON String to Laptop
+                    // MessageSender messageSender = new MessageSender();
+                    // messageSender.execute(obj.toString());
+
+                    // -----------------------------
+
+                    // Send JSON String to Laptop using MessageSender2
+                    /*
+                    Log.d("formCreate", "JSON File Debug : Connecting to server . . . ");
+                    ClientThread clientThread = new ClientThread();
+                    Thread thread = new Thread(clientThread);
+                    thread.start();
+                    Log.d("formCreate", "JSON File Debug : Connection Started ");
+
+                    if (null != clientThread) {
+                        clientThread.sendMessage(obj.toString());
+                    }
+
+                    Log.d("formCreate", "JSON File Debug : Disconnecting");
+                    clientThread = null;
+                    */
+
+                    // Save JSON File in Mobile
+                    /*String state = Environment.getExternalStorageState();
+                    if(!Environment.MEDIA_MOUNTED.equals(state)) {
+                        Log.d("formCreate", "JSON File Debug : File not mounted! ");
+                    }
+
+                    File file = new File(getExternalFilesDir(null), "formMaker.json");
+
+                    FileOutputStream outputStream = null;
+
+                    try {
+                        file.createNewFile();
+                        outputStream = new FileOutputStream(file, true);
+
+                        outputStream.write(obj.toString().getBytes());
+                        outputStream.flush();
+                        outputStream.close();
+
+                        Log.d("formCreate", "JSON File Debug : File created! ");
+                    } catch (Exception e) {
+                        Log.d("formCreate", "JSON File Debug : File error " + e.getMessage());
+                    }*/
+
+                    Intent intent = new Intent(formCreator.this, MainActivity2.class);
+                    startActivity(intent);
                 }
 
 
-                try {
-                    show_children(getWindow().getDecorView());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("formCreate", "JSON Object final :  " + obj.toString());
-
-                // Send JSON String to Laptop
-                // MessageSender messageSender = new MessageSender();
-                // messageSender.execute(obj.toString());
-
-                // -----------------------------
-
-                // Send JSON String to Laptop using MessageSender2
-                /*
-                Log.d("formCreate", "JSON File Debug : Connecting to server . . . ");
-                ClientThread clientThread = new ClientThread();
-                Thread thread = new Thread(clientThread);
-                thread.start();
-                Log.d("formCreate", "JSON File Debug : Connection Started ");
-
-                if (null != clientThread) {
-                    clientThread.sendMessage(obj.toString());
-                }
-
-                Log.d("formCreate", "JSON File Debug : Disconnecting");
-                clientThread = null;
-                */
-
-
-
-                // Save JSON File in Mobile
-                String state = Environment.getExternalStorageState();
-                if(!Environment.MEDIA_MOUNTED.equals(state)) {
-                    Log.d("formCreate", "JSON File Debug : File not mounted! ");
-                }
-
-                File file = new File(getExternalFilesDir(null), "formMaker.json");
-
-                FileOutputStream outputStream = null;
-
-                try {
-                    file.createNewFile();
-                    outputStream = new FileOutputStream(file, true);
-
-                    outputStream.write(obj.toString().getBytes());
-                    outputStream.flush();
-                    outputStream.close();
-
-                    Log.d("formCreate", "JSON File Debug : File created! ");
-                } catch (Exception e) {
-                    Log.d("formCreate", "JSON File Debug : File error " + e.getMessage());
-                }
 
             }
         });
 
 
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to EXIT?")
+                .setNegativeButton("No", null)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // formCreator.super.onBackPressed();
+                        // finish();
+                        Intent onBackClick = new Intent(formCreator.this, MainActivity2.class);
+                        startActivity(onBackClick);
+                    }
+                }).create().show();
 
     }
 
@@ -434,6 +619,7 @@ public class formCreator extends AppCompatActivity {
 //        }
         Log.d("formCreate", "------------------------------------------------------------");
     }
+
 
     // @Override
     // public Dialog onCreateDialog() {
