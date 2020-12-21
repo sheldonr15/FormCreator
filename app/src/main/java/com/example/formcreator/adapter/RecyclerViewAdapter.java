@@ -1,4 +1,4 @@
-package com.example.sortinggallery.adapter;
+package com.example.formcreator.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sortinggallery.DisplayForm;
-import com.example.sortinggallery.FormObject;
-import com.example.sortinggallery.R;
-import com.example.sortinggallery.formCreator;
+import com.example.formcreator.DisplayForm;
+import com.example.formcreator.FormObject;
+import com.example.formcreator.R;
+import com.example.formcreator.formCreator;
 
 import java.util.List;
 

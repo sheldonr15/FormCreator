@@ -1,4 +1,4 @@
-package com.example.sortinggallery.ui.slideshow;
+package com.example.formcreator.ui.slideshow;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.sortinggallery.R;
+import com.example.formcreator.R;
 
 public class SlideshowFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import androidx.appcompat.app.AppCompatActivity;
 

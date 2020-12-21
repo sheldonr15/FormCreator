@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,6 +29,9 @@ public class FormCardsDatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_4="date_from";
     public static final String COL_5="date_to";
     public static final String COL_6="form_address";
+    public static final String TABLE_NAME_2="form_filled";
+    public boolean tablesCreated = false;
+
 
     public FormCardsDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -36,8 +39,12 @@ public class FormCardsDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("DROP TABLE formdetails");
-        sqLiteDatabase.execSQL("CREATE TABLE formdetails (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, form_title TEXT, date_from TEXT, date_to TEXT, form_address TEXT)");
+        //sqLiteDatabase.execSQL("DROP TABLE formdetails");
+        Log.d("FormCardsDatabaseHelper", "Inside onCreate");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS formdetails (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, form_title TEXT, date_from TEXT, date_to TEXT, form_address TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS form_filled (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, form_address TEXT)");
+        Log.d("FormCardsDatabaseHelper", "Created both tables");
+        tablesCreated = true;
     }
 
     @Override
@@ -77,15 +84,50 @@ public class FormCardsDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addSubmission(String username, String formAddress){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("username", username);
+        contentValues.put("form_address", formAddress);
+        db.insert(TABLE_NAME_2, null, contentValues);
+        db.close();
+    }
+
     public List<FormObject> getAllForms(Context context) throws ParseException {
         Log.d("FormCardsDatabaseHelper", "Inside getAllForms()");
         SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref", MODE_PRIVATE);
         List<FormObject> formList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
+
+        onCreate(dbWrite);
+        // dbWrite.execSQL("CREATE TABLE IF NOT EXISTS formdetails (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, form_title TEXT, date_from TEXT, date_to TEXT, form_address TEXT)");
+        // dbWrite.execSQL("CREATE TABLE IF NOT EXISTS form_filled (ID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, form_address TEXT)");
+
+        String seeFormsFilled = "SELECT * FROM form_filled";
+        Cursor formsFilled = db.rawQuery(seeFormsFilled, null);
+        if(formsFilled.moveToNext()){
+            do{
+                Log.d("FormCardsDatabaseHelper", "Forms Filled Username gotten : " + formsFilled.getString(1));
+                Log.d("FormCardsDatabaseHelper", "Forms Filled Form Address gotten : " + formsFilled.getString(2));
+            } while(formsFilled.moveToNext());
+        } else {
+            Log.d("FormCardsDatabaseHelper", "Forms Filled : No Forms filled");
+        }
 
         // SQL query
-        String select = "SELECT * FROM formdetails WHERE username != '" + sharedPreferences.getString("username", "default") + "'";
+        String select = "SELECT * FROM formdetails WHERE username != '" + sharedPreferences.getString("username", "default") + "'  AND form_address NOT IN (SELECT form_address FROM form_filled WHERE username == '" + sharedPreferences.getString("username", "default") + "')";
+        Log.d("FormCardsDatabaseHelper", "select query : " + select);
         Cursor cursor = db.rawQuery(select, null);
+        /*Cursor cursor = null;
+        if(tablesCreated) {
+            String select = "SELECT * FROM formdetails WHERE username != '" + sharedPreferences.getString("username", "default") + "'  AND form_address NOT IN (SELECT IF EXISTS form_address FROM form_filled WHERE username == '" + sharedPreferences.getString("username", "default") + "')";
+            cursor = db.rawQuery(select, null);
+        }
+        else{
+            String select = "SELECT * FROM formdetails WHERE username != '" + sharedPreferences.getString("username", "default") + "'";
+            cursor = db.rawQuery(select, null);
+        }*/
 
         // Loop through
         if(cursor.moveToFirst()){
@@ -111,6 +153,7 @@ public class FormCardsDatabaseHelper extends SQLiteOpenHelper {
             Log.d("FormCardsDatabaseHelper", "cursor didn't get any values. Size of returned formList : " + formList.size());
         }
 
+        dbWrite.close();
         db.close();
         return formList;
     }

@@ -73,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_password"
                 android:drawableRight="@drawable/ic_password"
+                android:inputType="textPassword"
                 android:fontFamily="monospace"
                 tools:targetApi="jelly_bean" />
         </com.google.android.material.textfield.TextInputLayout>

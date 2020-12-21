@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -229,6 +229,8 @@ public class DisplayForm extends AppCompatActivity {
 
                 Log.d("DisplayForm.java", "Check JSON File after updation : " + jsonObject.toString());
 
+                FormCardsDatabaseHelper formdb = new FormCardsDatabaseHelper(DisplayForm.this);
+                formdb.addSubmission(getSharedPreferences("MySharedPref", MODE_PRIVATE).getString("username", "default"), formAddress);
 
                 onBackPressed();
 

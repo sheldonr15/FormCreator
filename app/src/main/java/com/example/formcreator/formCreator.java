@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.example.sortinggallery.R;
+import com.example.formcreator.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;

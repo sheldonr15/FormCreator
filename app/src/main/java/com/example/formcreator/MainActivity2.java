@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.sortinggallery.adapter.RecyclerViewAdapter;
+import com.example.formcreator.adapter.RecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 

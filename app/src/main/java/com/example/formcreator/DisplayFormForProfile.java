@@ -1,4 +1,4 @@
-package com.example.sortinggallery;
+package com.example.formcreator;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

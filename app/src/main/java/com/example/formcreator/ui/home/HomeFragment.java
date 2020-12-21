@@ -1,4 +1,4 @@
-package com.example.sortinggallery.ui.home;
+package com.example.formcreator.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,11 +17,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sortinggallery.FormCardsDatabaseHelper;
-import com.example.sortinggallery.FormObject;
-import com.example.sortinggallery.MainActivity2;
-import com.example.sortinggallery.R;
-import com.example.sortinggallery.adapter.RecyclerViewAdapter;
+import com.example.formcreator.FormCardsDatabaseHelper;
+import com.example.formcreator.FormObject;
+import com.example.formcreator.MainActivity2;
+import com.example.formcreator.R;
+import com.example.formcreator.adapter.RecyclerViewAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;

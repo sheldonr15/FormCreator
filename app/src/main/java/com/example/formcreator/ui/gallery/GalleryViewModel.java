@@ -1,4 +1,4 @@
-package com.example.sortinggallery.ui.gallery;
+package com.example.formcreator.ui.gallery;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
