@@ -12,6 +12,9 @@ git clone https://github.com/sheldonr15/FormCreator.git
 
 </br>
 
+
+:pushpin: Overview of App : 
+
 | [Login and Sign Up](#login-and-sign-up) | [Making Forms](#making-forms) | 
 | --- | --- |
 |<img src="gifs/Login-SignUp.gif" height="250" />|<img src="gifs/Create-Forms.gif" height="250" />| 
@@ -23,6 +26,7 @@ git clone https://github.com/sheldonr15/FormCreator.git
 |<img src="gifs/View-Download-Delete-Form.gif" height="250" />|
 
 </br>
+
 
 ### Making Forms
 - Similar to bullet points / radio buttons, checkboxes and the fields can also be added.
