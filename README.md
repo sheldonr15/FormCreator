@@ -12,6 +12,33 @@ git clone https://github.com/sheldonr15/FormCreator.git
 
 </br>
 
-#### Quick Guide on the working of the app can be found [here](https://drive.google.com/drive/folders/11Wy9I14OFwG1F9xX1qZ8Bnmm7HRtOk0O?usp=sharing) 
+| [Login and Sign Up](#login-and-sign-up) | [Making Forms](#making-forms) | 
+| --- | --- |
+|<img src="gifs/Login-SignUp.gif" height="250" />|<img src="gifs/Create-Forms.gif" height="250" />| 
 
+</br>
+
+| [View - Delete - Download Results](#view-/-delete-/-download-results) |
+| :--: |
+|<img src="gifs/View-Download-Delete-Form.gif" height="250" />|
+
+</br>
+
+### Making Forms
+- Similar to bullet points / radio buttons, checkboxes and the fields can also be added.
+- User can select date range in which the form must be visible.
+- On Clicking **Submit**, your form becomes available to other users.
+
+
+</br>
+
+### Login and Sign Up
+- Data stored and verified using SQLite.
+
+</br>
+
+### View / Delete / Download Results.
+- User can view his/her forms on the **Profile** section.
+- Deleting forms removes the forms from other users view too.
+- Downloading results stores the result in CSV format in the local storage.
 
