@@ -13,7 +13,7 @@ git clone https://github.com/sheldonr15/FormCreator.git
 </br>
 
 
-:pushpin: Overview of App : 
+### :pushpin: **Overview of App** : 
 
 | [Login and Sign Up](#login-and-sign-up) | [Making Forms](#making-forms) | 
 | --- | --- |
